@@ -1,79 +1,58 @@
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
+
+from flask import Flask, render_template, request, redirect, jsonify
 import json
 import os
 
-app = Flask(__name__, static_folder='static', static_url_path='')
-CORS(app)
+app = Flask(__name__)
 
-DATA_FILE = 'data.json'
+DATA_FILE = "data.json"
 
-# Инициализация файла данных
-if not os.path.exists(DATA_FILE):
-    with open(DATA_FILE, 'w') as f:
-        json.dump({
-            "juices": [
-                {"name": "🍓🍦 Strawberry ice cream", "available": True},
-                {"name": "🍑 peach ice", "available": True},
-                {"name": "🥝Kiwi and Guava", "available": True},
-                {"name": "🍋Perfumе lemon", "available": True},
-                {"name": "🔥Lava fire", "available": True},
-                {"name": "🍉 watermelon bubblegum", "available": True},
-                {"name": "🥶Mint ice", "available": True},
-                {"name": "🍉🫐blueberry watermelon", "available": True},
-                {"name": "🤩🍹Pomegranate lemonade", "available": True}
-            ]
-        }, f)
+ADMIN_USER = "@duxcrime"
+ADMIN_PASS = "duxcrime"
 
-def read_data():
-    with open(DATA_FILE, 'r') as f:
+def load_data():
+    if not os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "w") as f:
+            json.dump({"juices": []}, f)
+    with open(DATA_FILE, "r") as f:
         return json.load(f)
 
-def write_data(data):
-    with open(DATA_FILE, 'w') as f:
+def save_data(data):
+    with open(DATA_FILE, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-@app.route('/api/juices')
-def get_juices():
-    data = read_data()
-    return jsonify(data['juices'])
-
-@app.route('/api/update', methods=['POST'])
-def update_availability():
-    if request.json.get("admin_user") != "@duxcrime" or request.json.get("admin_pass") != "duxcrime":
-        return jsonify({"error": "Unauthorized"}), 403
-    name = request.json.get("name")
-    available = request.json.get("available")
-    data = read_data()
-    for juice in data['juices']:
-        if juice['name'] == name:
-            juice['available'] = available
-    write_data(data)
-    return jsonify({"success": True})
-
-@app.route('/api/add', methods=['POST'])
-def add_juice():
-    if request.json.get("admin_user") != "@duxcrime" or request.json.get("admin_pass") != "duxcrime":
-        return jsonify({"error": "Unauthorized"}), 403
-    new_name = request.json.get("name")
-    data = read_data()
-    data['juices'].append({"name": new_name, "available": True})
-    write_data(data)
-    return jsonify({"success": True})
-
-@app.route('/api/delete', methods=['POST'])
-def delete_juice():
-    if request.json.get("admin_user") != "@duxcrime" or request.json.get("admin_pass") != "duxcrime":
-        return jsonify({"error": "Unauthorized"}), 403
-    name = request.json.get("name")
-    data = read_data()
-    data['juices'] = [j for j in data['juices'] if j['name'] != name]
-    write_data(data)
-    return jsonify({"success": True})
-
-@app.route('/')
+@app.route("/")
 def index():
-    return send_from_directory('static', 'index.html')
+    data = load_data()
+    return render_template("index.html", juices=data["juices"])
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.route("/update", methods=["POST"])
+def update():
+    user = request.form.get("user")
+    password = request.form.get("pass")
+    if user != ADMIN_USER or password != ADMIN_PASS:
+        return "Unauthorized", 403
+
+    data = load_data()
+    name = request.form.get("name")
+    action = request.form.get("action")
+
+    if action == "add":
+        data["juices"].append({"name": name, "available": True})
+    elif action == "delete":
+        data["juices"] = [j for j in data["juices"] if j["name"] != name]
+    elif action == "toggle":
+        for juice in data["juices"]:
+            if juice["name"] == name:
+                juice["available"] = not juice["available"]
+                break
+
+    save_data(data)
+    return redirect("/")
+
+@app.route("/data")
+def get_data():
+    return jsonify(load_data())
+
+if __name__ == "__main__":
+    app.run(debug=True)
