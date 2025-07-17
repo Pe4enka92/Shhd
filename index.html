@@ -1,1 +1,49 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vozol — Жижа мечты</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>Vozol — Жижа мечты</header>
+  <div class="container">
+    <ul class="juice-list">
+      {% for juice in juices %}
+        <li onclick="playSound()">
+          {{ juice.name }}
+          <span class="{{ 'available' if juice.available else 'unavailable' }}">
+            {{ 'в наличии' if juice.available else 'нет в наличии' }}
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="price">Цена — <strong>10€</strong> за банку</p>
+    <div class="contact">Связь: <a href="https://t.me/duxcrime">@duxcrime</a></div>
+  </div>
+
+  <div class="admin">
+    <h2>Админ-панель</h2>
+    <form method="POST" action="/update">
+      <input type="text" name="user" placeholder="Юзернейм" required />
+      <input type="password" name="pass" placeholder="Пароль" required /><br/><br/>
+      <input type="text" name="name" placeholder="Название жижи (со смайликом)" required />
+      <select name="action">
+        <option value="add">Добавить</option>
+        <option value="toggle">Переключить наличие</option>
+        <option value="delete">Удалить</option>
+      </select>
+      <button type="submit">OK</button>
+    </form>
+  </div>
+
+  <audio id="vape-sound" src="/static/vape.mp3" preload="auto"></audio>
+  <script>
+    function playSound() {
+      document.getElementById('vape-sound').play();
+    }
+  </script>
+</body>
+</html>

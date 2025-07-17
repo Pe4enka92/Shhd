@@ -1,1 +1,51 @@
 
+body {
+  background: #121212;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  text-align: center;
+  font-size: 2.5rem;
+  padding: 2rem;
+  color: #00ffc3;
+}
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 20px;
+}
+.juice-list li {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+.available {
+  color: #00e676;
+}
+.unavailable {
+  color: #ff5252;
+}
+.admin {
+  max-width: 600px;
+  margin: 3rem auto;
+  background: #2c2c2c;
+  padding: 2rem;
+  border-radius: 15px;
+}
+.admin input, .admin select {
+  padding: 0.5rem;
+  margin: 0.3rem;
+}
+.admin button {
+  padding: 0.6rem 1rem;
+  background: #00e5ff;
+  border: none;
+  cursor: pointer;
+}
