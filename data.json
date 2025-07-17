@@ -1,0 +1,40 @@
+{
+  "juices": [
+    {
+      "name": "🍓🍦 Strawberry ice cream",
+      "available": true
+    },
+    {
+      "name": "🍑 peach ice",
+      "available": true
+    },
+    {
+      "name": "🥝Kiwi and Guava",
+      "available": true
+    },
+    {
+      "name": "🍋Perfumе lemon",
+      "available": true
+    },
+    {
+      "name": "🔥Lava fire",
+      "available": true
+    },
+    {
+      "name": "🍉 watermelon bubblegum",
+      "available": true
+    },
+    {
+      "name": "🥶Mint ice",
+      "available": true
+    },
+    {
+      "name": "🍉🫐blueberry watermelon",
+      "available": true
+    },
+    {
+      "name": "🤩🍹Pomegranate lemonade",
+      "available": true
+    }
+  ]
+}
